@@ -25,16 +25,13 @@ Future<Response> onGet(RequestContext ctx, String uuid) async {
 
   //AUTHORIZATION
   if(!(authUser.isContainOne(["SUPERADMIN","ADMIN","PEGAWAI"]))){
-    return RespHelper.unauthorized();
+    return RespHelper.forbidden();
   }
   //AUTHORIZATION
 
   try { 
-    Pegawai pegawai = await pegawaiRepo.getByUsername(authUser.username);
-
-    var object = await eomPenilaianRepo.getByUuid(uuid);
-
-    return Response.json(body: object);
+    var listObject = await eomCandidateRepo.readDetailsByPenilaian(uuid);
+    return Response.json(body: listObject);
   } catch(e){
     print(e);
     return RespHelper.badRequest(message: "Error Occured");

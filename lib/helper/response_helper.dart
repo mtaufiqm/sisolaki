@@ -25,6 +25,10 @@ class RespHelper{
     return RespHelper.message(statusCode: HttpStatus.forbidden,message: "Your Are Not Allowed to Access This Resources!");
   }
 
+    static Response notFound(){
+    return RespHelper.message(statusCode: HttpStatus.notFound,message: "Resources Not Found!");
+  }
+
   static Response methodNotAllowed(){
     return RespHelper.message(statusCode: HttpStatus.methodNotAllowed,message: "Method Not Allowed");
   }

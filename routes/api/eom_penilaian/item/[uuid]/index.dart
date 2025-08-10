@@ -26,7 +26,7 @@ Future<Response> onGet(RequestContext ctx, String uuid) async {
 
   //AUTHORIZATION
   if(!(authUser.isContainOne(["SUPERADMIN","ADMIN","KEPALA","KASUBBAG","PEGAWAI"]))){
-    return RespHelper.unauthorized();
+    return RespHelper.forbidden();
   }
   //AUTHORIZATION
 

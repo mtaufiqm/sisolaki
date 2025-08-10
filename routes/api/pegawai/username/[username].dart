@@ -26,7 +26,7 @@ Future<Response> onGet(RequestContext ctx, String username) async {
     //AUTHORIZATION
     User user = ctx.read<User>();
     if(!(user.isContainOne(["SUPERADMIN","ADMIN","ADMIN_INVENTORIES"]) || user.username == pegawaiRequested.username)){
-      return Response.json(statusCode: HttpStatus.unauthorized,body: {"message":"You Have No Access For This"});
+      return Response.json(statusCode: HttpStatus.forbidden,body: {"message":"You Have No Access For This"});
     }
     //AUTHORIZATION
     

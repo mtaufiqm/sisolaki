@@ -1,5 +1,7 @@
 import 'package:bpssulsel/helper/datetime_helper.dart';
 import 'package:bpssulsel/models/eom/eom_candidate.dart';
+import 'package:bpssulsel/models/pegawai.dart';
+import 'package:bpssulsel/models/tim.dart';
 import 'package:bpssulsel/repositories/myconnection.dart';
 import 'package:uuid/uuid.dart';
 
@@ -21,9 +23,11 @@ class EomCandidateRepository {
   }
 
   Future<EomCandidateDetails> getDetailsByUuid(dynamic uuid) async {
-      return this.conn.connectionPool.runTx<EomCandidateDetails>((tx) async {
+    return this.conn.connectionPool.runTx<EomCandidateDetails>((tx) async {
       String query = r'''
 SELECT 
+
+  ec.*,
 
   p.uuid as p_uuid,
   p.fullname as p_fullname,
@@ -56,7 +60,11 @@ WHERE ec.uuid = $1
       if(result.isEmpty){
         throw Exception("There is No Data ${uuid as String}");
       }
-      return EomCandidate.fromJson(result.first.toColumnMap());
+      var mapObject = result.first.toColumnMap();
+      EomCandidateDetails object = EomCandidateDetails.fromDb(mapObject);
+      object.pegawai = PegawaiDetails.fromJson(mapObject);
+      object.tim = TimDetails.fromJson(mapObject);
+      return object;
     }); 
   }
 
@@ -137,6 +145,58 @@ RETURNING *
       return listObject;
     });
   }
+
+    Future<List<EomCandidateDetails>> readDetailsByPenilaian(String penilaian_uuid) async {
+    return this.conn.connectionPool.runTx<List<EomCandidateDetails>>((tx) async {
+
+      String query = r'''
+SELECT 
+
+  ec.*,
+
+  p.uuid as p_uuid,
+  p.fullname as p_fullname,
+  p.fullname_with_title as p_fullname_with_title,
+  p.nickname as p_nickname,
+  p.nip as p_nip,
+  p.old_nip as p_old_nip,
+  p.phone_number as p_phone_number,
+  p.username as p_username,
+  p.status_pegawai as p_status_pegawai,
+  p.jabatan as p_jabatan,
+
+  tim.uuid as tim_uuid,
+  tim.title as tim_title,
+  tim.desc as tim_desc
+
+
+FROM eom_candidate ec
+LEFT JOIN tim
+ON ec.tim = tim.uuid
+
+LEFT JOIN pegawai p
+ON ec.pegawai = p.uuid
+
+WHERE ec.penilaian = $1
+''';
+      var result = await tx.execute(query,parameters: [
+        penilaian_uuid
+      ]);
+
+      List<EomCandidateDetails> listObject = [];
+
+      for(var item in result) {
+        var mapObject = item.toColumnMap();
+        EomCandidateDetails object = EomCandidateDetails.fromDb(mapObject);
+        object.pegawai = PegawaiDetails.fromJson(mapObject);
+        object.tim = TimDetails.fromJson(mapObject);
+        listObject.add(object);
+      }
+      return listObject;
+    });
+  }
+
+
 
   Future<void> delete(dynamic uuid) async {
     return this.conn.connectionPool.runTx<void>((tx) async {

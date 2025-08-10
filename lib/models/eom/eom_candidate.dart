@@ -8,13 +8,13 @@ class EomCandidate {
   String? uuid;
   String penilaian;
   int order;
-  String tim;
+  String? tim;
   String pegawai;
   EomCandidate({
     this.uuid,
     required this.penilaian,
     required this.order,
-    required this.tim,
+    this.tim,
     required this.pegawai,
   });
 
@@ -49,7 +49,7 @@ class EomCandidate {
       uuid: map['uuid'] != null ? map['uuid'] as String : null,
       penilaian: map['penilaian'] as String,
       order: map['order'] as int,
-      tim: map['tim'] as String,
+      tim: map['tim'] != null ? map['tim'] as String : null,
       pegawai: map['pegawai'] as String,
     );
   }
@@ -69,6 +69,15 @@ class EomCandidate {
       other.order == order &&
       other.tim == tim &&
       other.pegawai == pegawai;
+  }
+
+  @override
+  int get hashCode {
+    return uuid.hashCode ^
+      penilaian.hashCode ^
+      order.hashCode ^
+      tim.hashCode ^
+      pegawai.hashCode;
   }
 }
 
@@ -121,6 +130,17 @@ class EomCandidateDetails {
       pegawai: map['pegawai'] != null ? PegawaiDetails.fromJson(map['pegawai'] as Map<String,dynamic>) : null,
     );
   }
+
+  factory EomCandidateDetails.fromDb(Map<String, dynamic> map) {
+    return EomCandidateDetails(
+      uuid: map['uuid'] != null ? map['uuid'] as String : null,
+      penilaian: map['penilaian'] as String,
+      order: map['order'] as int,
+      tim: null,
+      pegawai: null,
+    );
+  }
+
 
   @override
   String toString() {

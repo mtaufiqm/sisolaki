@@ -35,7 +35,8 @@ RETURNING *
         object.choice2,
         object.created_at,
         object.last_updated,
-        object.is_complete
+        object.is_complete,
+        object.uuid!
       ]);
       if(result.isEmpty){
         throw Exception("Failed Update Data Penilaian ${object.uuid}");

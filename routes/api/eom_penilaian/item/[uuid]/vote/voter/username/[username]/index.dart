@@ -16,11 +16,10 @@ Future<Response> onRequest(
   // TODO: implement route handler
   return (switch(context.request.method){
     HttpMethod.get => onGet(context,uuid,username),
+    HttpMethod.post => onPost(context,uuid,username),
     _ => Future.value(RespHelper.methodNotAllowed())
   });
 }
-
-
 
 Future<Response> onGet(RequestContext ctx, String uuid, String username) async {
   EomVoteRepository eomVoteRepo = ctx.read<EomVoteRepository>();
@@ -51,6 +50,7 @@ Future<Response> onPost(RequestContext ctx, String uuid, String username) async 
   PegawaiRepository pegawaiRepo = ctx.read<PegawaiRepository>();
   User authUser = ctx.read<User>();
 
+
   //AUTHORIZATION
   if(!(authUser.isContainOne(["SUPERADMIN","ADMIN","KEPALA","KASUBBAG"]) || authUser.username == username)){
     return RespHelper.forbidden();
@@ -71,6 +71,7 @@ Future<Response> onPost(RequestContext ctx, String uuid, String username) async 
 
     EomVote updateVote = EomVote.fromJson(mapBody);
     updateVote.uuid = voteDetails.uuid!;
+    updateVote.penilaian = voteDetails.penilaian;
     updateVote.voter = voteDetails.voter!.uuid!;
     updateVote.created_at = voteDetails.created_at;
     updateVote.last_updated = voteDetails.last_updated;
@@ -96,6 +97,7 @@ Future<Response> onPost(RequestContext ctx, String uuid, String username) async 
 
 
   } catch(err){
+    print("Error ${err}");
     return RespHelper.badRequest(message: "Error Occured ${err}");
   }
 }

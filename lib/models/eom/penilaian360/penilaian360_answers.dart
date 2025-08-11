@@ -45,6 +45,15 @@ class Penilaian360Answers {
     );
   }
 
+    factory Penilaian360Answers.fromDb(Map<String, dynamic> map) {
+    return Penilaian360Answers(
+      uuid: map['pa_uuid'] != null ? map['pa_uuid'] as String : null,
+      penilaian360: map['pa_penilaian360'] as String,
+      question: map['pa_question'] as String,
+      value: map['pa_value'] as int,
+    );
+  }
+
 
   @override
   String toString() {
@@ -61,5 +70,4 @@ class Penilaian360Answers {
       other.question == question &&
       other.value == value;
   }
-
 }

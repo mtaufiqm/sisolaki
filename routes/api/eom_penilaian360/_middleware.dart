@@ -3,6 +3,7 @@ import 'package:bpssulsel/repositories/eom/eom_penilaian_repository.dart';
 import 'package:bpssulsel/repositories/eom/eom_vote_repository.dart';
 import 'package:bpssulsel/repositories/eom/penilaian360/eom_penilaian360_repository.dart';
 import 'package:bpssulsel/repositories/eom/penilaian360/penilaian360_answers_repository.dart';
+import 'package:bpssulsel/repositories/eom/penilaian360/penilaian360_questions_repository.dart';
 import 'package:bpssulsel/repositories/myconnection.dart';
 import 'package:bpssulsel/repositories/pegawai_repository.dart';
 import 'package:dart_frog/dart_frog.dart';
@@ -28,6 +29,10 @@ Handler middleware(Handler handler) {
     MyConnectionPool conn = ctx.read<MyConnectionPool>();
     Penilaian360AnswersRepository ep360AnswerRepository = Penilaian360AnswersRepository(conn);
     return ep360AnswerRepository;
+  })).use(provider<Penilaian360QuestionsRepository>((ctx){
+    MyConnectionPool conn = ctx.read<MyConnectionPool>();
+    Penilaian360QuestionsRepository ep360QuestionRepository = Penilaian360QuestionsRepository(conn);
+    return ep360QuestionRepository;
   })).use(provider<PegawaiRepository>((ctx){
     MyConnectionPool conn = ctx.read<MyConnectionPool>();
     PegawaiRepository pegawaiRepository = PegawaiRepository(conn);

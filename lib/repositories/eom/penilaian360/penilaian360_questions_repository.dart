@@ -40,7 +40,7 @@ pq.*,
 pa.uuid as pa_uuid,
 pa.penilaian360 as pa_penilaian360,
 pa.question as pa_question,
-pa.value as pa.value
+pa.value as pa_value
 
 FROM penilaian360_answers pa
 LEFT JOIN penilaian360_questions pq

@@ -10,6 +10,17 @@ class EomPenilaian360Repository {
 
   EomPenilaian360Repository(this.conn);
 
+  Future<EomPenilaian360> getByUuid(String uuid) async {
+    return this.conn.connectionPool.runTx<EomPenilaian360>((tx) async {
+      var result = await tx.execute(r"SELECT * FROM eom_penilaian360 ep360 WHERE ep360.uuid = $1",parameters: [uuid]);
+      if(result.isEmpty) {
+        throw Exception("There is No Data ${uuid}");
+      }
+
+      return EomPenilaian360.fromJson(result.first.toColumnMap());
+    });
+  }
+
   Future<EomPenilaian360Details> getDetailsByUuid(String ep360_uuid) async {
     return this.conn.connectionPool.runTx<EomPenilaian360Details>((tx) async {
 

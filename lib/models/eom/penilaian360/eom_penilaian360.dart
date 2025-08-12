@@ -1,7 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
+
 import 'package:bpssulsel/models/eom/eom_candidate.dart';
+import 'package:bpssulsel/models/eom/penilaian360/penilaian360_questions.dart';
 import 'package:bpssulsel/models/pegawai.dart';
 
 class EomPenilaian360 {
@@ -217,4 +220,42 @@ class EomPenilaian360Details {
       created_at.hashCode ^
       last_updated.hashCode;
   }
+}
+
+
+class Penilaian360WithQuestions {
+  EomPenilaian360Details penilaian360;
+  List<Penilaian360QuestionsAnswer> questions_answer;
+  Penilaian360WithQuestions({
+    required this.penilaian360,
+    required this.questions_answer,
+  });
+
+  Penilaian360WithQuestions copyWith({
+    EomPenilaian360Details? penilaian360,
+    List<Penilaian360QuestionsAnswer>? questions_answer,
+  }) {
+    return Penilaian360WithQuestions(
+      penilaian360: penilaian360 ?? this.penilaian360,
+      questions_answer: questions_answer ?? this.questions_answer,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'penilaian360': penilaian360.toJson(),
+      'questions_answer': questions_answer.map((x) => x.toJson()).toList(),
+    };
+  }
+
+  factory Penilaian360WithQuestions.fromJson(Map<String, dynamic> map) {
+    return Penilaian360WithQuestions(
+      penilaian360: EomPenilaian360Details.fromJson(map['penilaian360'] as Map<String,dynamic>),
+      questions_answer: List<Penilaian360QuestionsAnswer>.from((map['questions_answer'] as List<dynamic>).map<Penilaian360QuestionsAnswer>((x) => Penilaian360QuestionsAnswer.fromJson(x as Map<String,dynamic>),),),
+    );
+  }
+
+  @override
+  String toString() => 'Penilaian360WithQuestions(penilaian360: $penilaian360, questions_answer: $questions_answer)';
+
 }

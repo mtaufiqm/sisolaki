@@ -1,6 +1,14 @@
+import 'package:bpssulsel/helper/response_helper.dart';
 import 'package:dart_frog/dart_frog.dart';
 
-Response onRequest(RequestContext context) {
+Future<Response> onRequest(RequestContext context) async {
   // TODO: implement route handler
-  return Response(body: 'This is a new route!');
+  return switch(context.request.method){
+    HttpMethod.get => onGet(context),
+    _ => Future.value(RespHelper.methodNotAllowed())
+  };
+}
+
+Future<Response> onGet(RequestContext ctx) async {
+  return Response.json();
 }

@@ -81,6 +81,36 @@ class Pegawai {
     );
   }
 
+  factory Pegawai.fromDb(Map<String, dynamic> map) {
+    return Pegawai(
+      uuid: map['uuid'] != null ? map['uuid'] as String : null,
+      fullname: map['fullname'] != null ? map['fullname'] as String : null,
+      fullname_with_title: map['fullname_with_title'] != null ? map['fullname_with_title'] as String : null,
+      nickname: map['nickname'] != null ? map['nickname'] as String : null,
+      nip: map['nip'] != null ? map['nip'] as String : null,
+      old_nip: map['old_nip'] != null ? map['old_nip'] as String : null,
+      phone_number: map['phone_number'] != null ? map['phone_number'] as String : null,
+      username: map['username'] as String,
+      status_pegawai: map['status_pegawai'] as int,
+      jabatan: map['jabatan'] as int,
+    );
+  }
+
+  factory Pegawai.fromDbPrefix(Map<String, dynamic> map, String prefix) {
+    return Pegawai(
+      uuid: map['${prefix}_uuid'] != null ? map['${prefix}_uuid'] as String : null,
+      fullname: map['${prefix}_fullname'] != null ? map['${prefix}_fullname'] as String : null,
+      fullname_with_title: map['${prefix}_fullname_with_title'] != null ? map['${prefix}_fullname_with_title'] as String : null,
+      nickname: map['${prefix}_nickname'] != null ? map['${prefix}_nickname'] as String : null,
+      nip: map['${prefix}_nip'] != null ? map['${prefix}_nip'] as String : null,
+      old_nip: map['${prefix}_old_nip'] != null ? map['${prefix}_old_nip'] as String : null,
+      phone_number: map['${prefix}_phone_number'] != null ? map['${prefix}_phone_number'] as String : null,
+      username: map['${prefix}_username'] as String,
+      status_pegawai: map['${prefix}_status_pegawai'] as int,
+      jabatan: map['${prefix}_jabatan'] as int,
+    );
+  }
+
   @override
   String toString() {
     return 'Pegawai(uuid: $uuid, fullname: $fullname, fullname_with_title: $fullname_with_title, nickname: $nickname, nip: $nip, old_nip: $old_nip, phone_number: $phone_number, username: $username, status_pegawai: $status_pegawai, jabatan: $jabatan)';

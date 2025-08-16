@@ -23,7 +23,7 @@ class UserRepository extends MyRepository<User>{
   Future<List<User>> readAll() async{
     return this.connection.connectionPool.withConnection((conn) async {
       return conn.runTx((tx) async {
-        Result result = await tx.execute('SELECT username, is_active FROM "user";');
+        Result result = await tx.execute('SELECT username, is_active FROM "user" ORDER BY is_active DESC;');
         List<User> listOfUser = <User>[];
         for(ResultRow i in result){
           Map<String,dynamic> mapRow = i.toColumnMap();
@@ -34,7 +34,7 @@ class UserRepository extends MyRepository<User>{
       });
     });
   }
-
+  
   Future<User> create(User user) async {
     return this.connection.connectionPool.withConnection((conn) async{
       return conn.runTx<User>((tx) async{

@@ -30,7 +30,7 @@ class User {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'username': username,
-      'pwd': pwd,
+      'pwd': null,
       'is_active': is_active,
       'roles': roles,
     };
@@ -42,6 +42,16 @@ class User {
       pwd: map['pwd'] != null ? map['pwd'] as String : null,
       is_active: map['is_active'] as bool,
       roles: map['roles'] != null ? List<String>.from((map['roles'] as List<dynamic>).cast<String>()) : null,
+    );
+  }
+
+
+  factory User.fromDb(Map<String, dynamic> map) {
+    return User(
+      username: map['username'] as String,
+      pwd: map['pwd'] != null ? map['pwd'] as String : null,
+      is_active: map['is_active'] as bool,
+      roles: null,
     );
   }
 

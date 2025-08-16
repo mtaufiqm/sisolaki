@@ -165,7 +165,7 @@ ALTER TABLE "eom_penilaian360" ADD FOREIGN KEY ("penilaian") REFERENCES "eom_pen
 
 ALTER TABLE "eom_penilaian360" ADD FOREIGN KEY ("voter") REFERENCES "pegawai" ("uuid");
 
-ALTER TABLE "eom_penilaian360" ADD FOREIGN KEY ("candidate") REFERENCES "eom_candidate" ("uuid");
+ALTER TABLE "eom_penilaian360" ADD FOREIGN KEY ("candidate") REFERENCES "eom_candidate" ("uuid") ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE "penilaian360_answers" ADD FOREIGN KEY ("penilaian360") REFERENCES "eom_penilaian360" ("uuid") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -180,3 +180,5 @@ ALTER TABLE "eom_vote" ADD UNIQUE("penilaian","voter");
 ALTER TABLE "eom_candidate" ADD UNIQUE ("penilaian","pegawai");
 
 ALTER TABLE "penilaian360_answers" ADD UNIQUE ("penilaian360","question");
+
+ALTER TABLE "eom_data" ADD UNIQUE ("candidate");

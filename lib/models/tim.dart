@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 
 import 'package:bpssulsel/models/pegawai.dart';
+import 'package:bpssulsel/models/tim_pegawai.dart';
 
 class Tim {
   String? uuid;
@@ -43,6 +44,14 @@ class Tim {
     );
   }
 
+  factory Tim.fromDbPrefix(Map<String, dynamic> map, String prefix) {
+    return Tim(
+      uuid: map['${prefix}_uuid'] != null ? map['${prefix}_uuid'] as String : null,
+      title: map['${prefix}_title'] as String,
+      desc: map['${prefix}_desc'] as String
+    );
+  }
+
   @override
   String toString() => 'Tim(uuid: $uuid, title: $title, desc: $desc)';
 
@@ -54,67 +63,6 @@ class Tim {
       other.uuid == uuid &&
       other.title == title &&
       other.desc == desc;
-  }
-}
-
-class TimWithPegawai {
-  String? uuid;
-  String title;
-  String desc;
-  List<Pegawai> pegawai = [];
-  TimWithPegawai({
-    this.uuid,
-    required this.title,
-    required this.desc,
-    required this.pegawai,
-  });
-
-  TimWithPegawai copyWith({
-    String? uuid,
-    String? title,
-    String? desc,
-    List<Pegawai>? pegawai,
-  }) {
-    return TimWithPegawai(
-      uuid: uuid ?? this.uuid,
-      title: title ?? this.title,
-      desc: desc ?? this.desc,
-      pegawai: pegawai ?? this.pegawai,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'uuid': uuid,
-      'title': title,
-      'desc': desc,
-      'pegawai': pegawai.map((x) => x.toJson()).toList(),
-    };
-  }
-
-  factory TimWithPegawai.fromJson(Map<String, dynamic> map) {
-    return TimWithPegawai(
-      uuid: map['uuid'] != null ? map['uuid'] as String : null,
-      title: map['title'] as String,
-      desc: map['desc'] as String,
-      pegawai: List<Pegawai>.from((map['pegawai'] as List<dynamic>).map<Pegawai>((x) => Pegawai.fromJson(x as Map<String,dynamic>))),
-    );
-  }
-
-  @override
-  String toString() {
-    return 'TimWithPegawai(uuid: $uuid, title: $title, desc: $desc, pegawai: $pegawai)';
-  }
-
-  @override
-  bool operator ==(covariant TimWithPegawai other) {
-    if (identical(this, other)) return true;
-    final listEquals = const DeepCollectionEquality().equals;
-    return 
-      other.uuid == uuid &&
-      other.title == title &&
-      other.desc == desc &&
-      listEquals(other.pegawai, pegawai);
   }
 }
 
@@ -171,4 +119,78 @@ class TimDetails {
 
   @override
   int get hashCode => tim_uuid.hashCode ^ tim_title.hashCode ^ tim_desc.hashCode;
+}
+
+
+
+class TimWithPegawai {
+  String? uuid;
+  String title;
+  String desc;
+  List<TimPegawai> pegawai = [];
+  TimWithPegawai({
+    this.uuid,
+    required this.title,
+    required this.desc,
+    required this.pegawai,
+  });
+
+  TimWithPegawai copyWith({
+    String? uuid,
+    String? title,
+    String? desc,
+    List<TimPegawai>? pegawai,
+  }) {
+    return TimWithPegawai(
+      uuid: uuid ?? this.uuid,
+      title: title ?? this.title,
+      desc: desc ?? this.desc,
+      pegawai: pegawai ?? this.pegawai,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'uuid': uuid,
+      'title': title,
+      'desc': desc,
+      'pegawai': pegawai.map((x) => x.toJson()).toList(),
+    };
+  }
+
+  factory TimWithPegawai.fromJson(Map<String, dynamic> map) {
+    return TimWithPegawai(
+      uuid: map['uuid'] != null ? map['uuid'] as String : null,
+      title: map['title'] as String,
+      desc: map['desc'] as String,
+      pegawai: List<TimPegawai>.from((map['pegawai'] as List<dynamic>).map<TimPegawai>((x) => TimPegawai.fromJson(x as Map<String,dynamic>))),
+    );
+  }
+
+    factory TimWithPegawai.fromDb(Map<String, dynamic> map) {
+    return TimWithPegawai(
+      uuid: map['uuid'] != null ? map['uuid'] as String : null,
+      title: map['title'] as String,
+      desc: map['desc'] as String,
+      pegawai: []
+    );
+  }
+
+  @override
+  String toString() {
+    return 'TimWithPegawai(uuid: $uuid, title: $title, desc: $desc, pegawai: $pegawai)';
+  }
+
+  @override
+  bool operator ==(covariant TimWithPegawai other) {
+    if (identical(this, other)) return true;
+    final listEquals = const DeepCollectionEquality().equals;
+  
+    return 
+      other.uuid == uuid &&
+      other.title == title &&
+      other.desc == desc &&
+      listEquals(other.pegawai, pegawai);
+  }
+
 }

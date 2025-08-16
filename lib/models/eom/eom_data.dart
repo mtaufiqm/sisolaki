@@ -12,25 +12,25 @@ class EomData {
   String? uuid;
   String candidate;
   double kjk;
-  double vote;
+  int vote;
   double ckp;
-  String created_at;
-  String last_updated;
+  String? created_at;
+  String? last_updated;
   EomData({
     this.uuid,
     required this.candidate,
     required this.kjk,
     required this.vote,
     required this.ckp,
-    required this.created_at,
-    required this.last_updated,
+    this.created_at,
+    this.last_updated,
   });
 
   EomData copyWith({
     String? uuid,
     String? candidate,
     double? kjk,
-    double? vote,
+    int? vote,
     double? ckp,
     String? created_at,
     String? last_updated,
@@ -63,10 +63,34 @@ class EomData {
       uuid: map['uuid'] != null ? map['uuid'] as String : null,
       candidate: map['candidate'] as String,
       kjk: map['kjk'] as double,
-      vote: map['vote'] as double,
+      vote: map['vote'] as int,
       ckp: map['ckp'] as double,
-      created_at: map['created_at'] as String,
-      last_updated: map['last_updated'] as String,
+      created_at: map['created_at'] != null ? map['created_at'] as String : null,
+      last_updated: map['last_updated'] != null ? map['last_updated'] as String : null,
+    );
+  }
+
+  factory EomData.fromDb(Map<String, dynamic> map) {
+    return EomData(
+      uuid: map['uuid'] != null ? map['uuid'] as String : null,
+      candidate: map['candidate'] as String,
+      kjk: map['kjk'] as double,
+      vote: map['vote'] as int,
+      ckp: map['ckp'] as double,
+      created_at: map['created_at'] != null ? map['created_at'] as String : null,
+      last_updated: map['last_updated'] != null ? map['last_updated'] as String : null,
+    );
+  }
+
+  factory EomData.fromDbPrefix(Map<String, dynamic> map, String prefix) {
+    return EomData(
+      uuid: map['${prefix}_uuid'] != null ? map['${prefix}_uuid'] as String : null,
+      candidate: map['${prefix}_candidate'] as String,
+      kjk: map['${prefix}_kjk'] as double,
+      vote: map['${prefix}_vote'] as int,
+      ckp: map['${prefix}_ckp'] as double,
+      created_at: map['${prefix}_created_at'] != null ? map['${prefix}_created_at'] as String : null,
+      last_updated: map['${prefix}_last_updated'] != null ? map['${prefix}_last_updated'] as String : null,
     );
   }
 
@@ -89,4 +113,14 @@ class EomData {
       other.last_updated == last_updated;
   }
 
+  @override
+  int get hashCode {
+    return uuid.hashCode ^
+      candidate.hashCode ^
+      kjk.hashCode ^
+      vote.hashCode ^
+      ckp.hashCode ^
+      created_at.hashCode ^
+      last_updated.hashCode;
+  }
 }

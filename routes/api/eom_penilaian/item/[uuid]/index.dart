@@ -80,7 +80,7 @@ Future<Response> onDelete(RequestContext ctx, String uuid) async {
   User authUser = ctx.read<User>();
 
   //AUTHORIZATION
-  if(!(authUser.isContainOne(["SUPERADMIN","ADMIN"]))){
+  if(!(authUser.isContainOne(["SUPERADMIN","ADMIN","KEPALA","KASUBBAG"]))){
     return RespHelper.unauthorized();
   }
   //AUTHORIZATION
@@ -88,9 +88,9 @@ Future<Response> onDelete(RequestContext ctx, String uuid) async {
   try { 
     await eomPenilaianRepo.delete(uuid);
     return Response.json(body: "SUCCESS");
-  } catch(e){
-    print(e);
-    return RespHelper.badRequest(message: "Error Occured ${e}");
+  } catch(err){
+    print("Error Delete ${err}");
+    return RespHelper.badRequest(message: "Error Occured ${err}");
   }
 }
 

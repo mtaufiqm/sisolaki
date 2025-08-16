@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:bpssulsel/helper/response_helper.dart';
-import 'package:bpssulsel/models/eom/eom_candidate.dart';
 import 'package:bpssulsel/models/user.dart';
 import 'package:bpssulsel/repositories/eom/eom_candidate_repository.dart';
 import 'package:bpssulsel/repositories/eom/eom_penilaian_repository.dart';
@@ -14,7 +11,7 @@ Future<Response> onRequest(
 ) async {
   return switch(context.request.method) {
     HttpMethod.get => onGet(context,uuid),
-    HttpMethod.post => onPost(context,uuid),
+    HttpMethod.delete => onDelete(context,uuid),
     _ => Future.value(RespHelper.methodNotAllowed())
   };
 }
@@ -24,7 +21,7 @@ Future<Response> onGet(RequestContext ctx, String uuid) async {
   return Response.json();
 }
 
-Future<Response> onPost(RequestContext ctx, String uuid) async {
+Future<Response> onDelete(RequestContext ctx, String uuid) async {
   EomPenilaianRepository eomPenilaianRepo = ctx.read<EomPenilaianRepository>();
   EomCandidateRepository eomCandidateRepo = ctx.read<EomCandidateRepository>();
   PegawaiRepository pegawaiRepo = ctx.read<PegawaiRepository>();
@@ -36,17 +33,13 @@ Future<Response> onPost(RequestContext ctx, String uuid) async {
   }
   //AUTHORIZATION
 
+  print("Delete Called");
+
   try {
-    var jsonBody = await ctx.request.json();
-    if(!(jsonBody is Map<String,dynamic>)){
-      return RespHelper.badRequest(message: "Invalid Input JSON");
-    }
-    var input = EomCandidateWithData.fromJson(jsonBody as Map<String,dynamic>);
-    input.penilaian = uuid;
-    var result = await eomCandidateRepo.create(input);
-    return Response.json(body: result);
+    await eomCandidateRepo.delete(uuid);
+    return RespHelper.message(message: "SUCCESS");
   } catch(err){
-    print("Erorr ${err}");
+    print("Error Delete ${err}");
     return RespHelper.badRequest(message: "Error Occured ${err}");
   }
 }

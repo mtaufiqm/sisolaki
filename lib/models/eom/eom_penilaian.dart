@@ -69,6 +69,33 @@ class EomPenilaian {
     );
   }
 
+  factory EomPenilaian.fromDb(Map<String, dynamic> map) {
+    return EomPenilaian(
+      uuid: map['uuid'] != null ? map['uuid'] as String : null,
+      desc: map['desc'] != null ? map['desc'] as String : null,
+      periode: map['periode'] as String,
+      start_date: map['start_date'] as String,
+      end_date: map['end_date'] as String,
+      status: map['status'] as int,
+      created_at: map['created_at'] != null ? map['created_at'] as String : null,
+      last_updated: map['last_updated'] != null ? map['last_updated'] as String : null,
+    );
+  }
+
+  
+  factory EomPenilaian.fromDbPrefix(Map<String, dynamic> map, String prefix) {
+    return EomPenilaian(
+      uuid: map['${prefix}_uuid'] != null ? map['${prefix}_uuid'] as String : null,
+      desc: map['${prefix}_desc'] != null ? map['${prefix}_desc'] as String : null,
+      periode: map['${prefix}_periode'] as String,
+      start_date: map['${prefix}_start_date'] as String,
+      end_date: map['${prefix}_end_date'] as String,
+      status: map['${prefix}_status'] as int,
+      created_at: map['${prefix}_created_at'] != null ? map['${prefix}_created_at'] as String : null,
+      last_updated: map['${prefix}_last_updated'] != null ? map['${prefix}_last_updated'] as String : null,
+    );
+  }
+
   @override
   String toString() {
     return 'EomPenilaian(uuid: $uuid, desc: $desc, periode: $periode, start_date: $start_date, end_date: $end_date, status: $status, created_at: $created_at, last_updated: $last_updated)';

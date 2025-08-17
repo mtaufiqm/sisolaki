@@ -45,5 +45,4 @@ Future<Response> onPost(RequestContext context) async{
     return RespHelper.message(statusCode: HttpStatus.badRequest,message: "Username already exists!");
   }
   return Response.json(statusCode: HttpStatus.ok,body: {"username":username});
-
 }

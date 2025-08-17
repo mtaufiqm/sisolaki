@@ -1,4 +1,5 @@
 import 'package:bpssulsel/models/pegawai.dart';
+import 'package:bpssulsel/models/tim.dart';
 import 'package:bpssulsel/repositories/myconnection.dart';
 import 'package:bpssulsel/repositories/myrepository.dart';
 import 'package:postgres/postgres.dart';

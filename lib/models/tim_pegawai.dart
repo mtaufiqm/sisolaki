@@ -81,3 +81,72 @@ class TimPegawai {
       tim_role.hashCode;
   }
 }
+
+class TimPegawaiDTO {
+  String? uuid;
+  String tim;
+  String pegawai;
+  int tim_role;
+  TimPegawaiDTO({
+    this.uuid,
+    required this.tim,
+    required this.pegawai,
+    required this.tim_role,
+  });
+
+  TimPegawaiDTO copyWith({
+    String? uuid,
+    String? tim,
+    String? pegawai,
+    int? tim_role,
+  }) {
+    return TimPegawaiDTO(
+      uuid: uuid ?? this.uuid,
+      tim: tim ?? this.tim,
+      pegawai: pegawai ?? this.pegawai,
+      tim_role: tim_role ?? this.tim_role,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'uuid': uuid,
+      'tim': tim,
+      'pegawai': pegawai,
+      'tim_role': tim_role,
+    };
+  }
+
+  factory TimPegawaiDTO.fromJson(Map<String, dynamic> map) {
+    return TimPegawaiDTO(
+      uuid: map['uuid'] != null ? map['uuid'] as String : null,
+      tim: map['tim'] as String,
+      pegawai: map['pegawai'] as String,
+      tim_role: map['tim_role'] as int,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'TimPegawaiDTO(uuid: $uuid, tim: $tim, pegawai: $pegawai, tim_role: $tim_role)';
+  }
+
+  @override
+  bool operator ==(covariant TimPegawaiDTO other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.uuid == uuid &&
+      other.tim == tim &&
+      other.pegawai == pegawai &&
+      other.tim_role == tim_role;
+  }
+
+  @override
+  int get hashCode {
+    return uuid.hashCode ^
+      tim.hashCode ^
+      pegawai.hashCode ^
+      tim_role.hashCode;
+  }
+}

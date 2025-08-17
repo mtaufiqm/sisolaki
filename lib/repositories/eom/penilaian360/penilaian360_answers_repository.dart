@@ -26,7 +26,6 @@ class Penilaian360AnswersRepository {
       if(answers.isEmpty){
         throw Exception("There is No Answers");
       }
-
       var result = await tx.execute(r"SELECT * FROM eom_penilaian360 WHERE uuid = $1",parameters: [
         penilaian360
       ]);

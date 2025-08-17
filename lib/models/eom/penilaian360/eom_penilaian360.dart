@@ -222,7 +222,6 @@ class EomPenilaian360Details {
   }
 }
 
-
 class Penilaian360WithQuestions {
   EomPenilaian360Details penilaian360;
   List<Penilaian360QuestionsAnswer> questions_answer;
@@ -257,5 +256,4 @@ class Penilaian360WithQuestions {
 
   @override
   String toString() => 'Penilaian360WithQuestions(penilaian360: $penilaian360, questions_answer: $questions_answer)';
-
 }

@@ -24,12 +24,6 @@ Future<Response> onGet(RequestContext ctx, String uuid) async {
   PegawaiRepository pegawaiRepo = ctx.read<PegawaiRepository>();
   User authUser = ctx.read<User>();
 
-  //AUTHORIZATION
-  if(!(authUser.isContainOne(["SUPERADMIN","ADMIN","KEPALA","KASUBBAG","PEGAWAI"]))){
-    return RespHelper.forbidden();
-  }
-  //AUTHORIZATION
-
   try {
     EomPenilaian360Details object = await eop360Repo.getDetailsByUuid(uuid);
 

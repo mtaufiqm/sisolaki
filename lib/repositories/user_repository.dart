@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bpssulsel/models/roles.dart';
+import 'package:bpssulsel/models/tim.dart';
 import 'package:bpssulsel/models/user.dart';
 import 'package:bpssulsel/repositories/myconnection.dart';
 import 'package:bpssulsel/repositories/myrepository.dart';

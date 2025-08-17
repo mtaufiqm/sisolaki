@@ -18,5 +18,11 @@ class Roles {
       description: map['description'] as String,
     );
   }
+
+  factory Roles.fromJson(Map<String, dynamic> map) {
+    return Roles(
+      description: map['description'] as String,
+    );
+  }
 }
 

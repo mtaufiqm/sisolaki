@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:bpssulsel/models/eom/eom_candidate.dart';
+
   // uuid text pk
   // candidate text 
   // kjk double [not null,default:0.0]
@@ -122,5 +124,91 @@ class EomData {
       ckp.hashCode ^
       created_at.hashCode ^
       last_updated.hashCode;
+  }
+}
+
+class VoteResult {
+  EomCandidateDetails candidate;
+  double kjk;
+  double ckp;
+  int vote;
+  double penilaian360;
+  double average;
+  VoteResult({
+    required this.candidate,
+    required this.kjk,
+    required this.ckp,
+    required this.vote,
+    required this.penilaian360,
+    required this.average,
+  });
+
+  VoteResult copyWith({
+    EomCandidateDetails? candidate,
+    double? kjk,
+    double? ckp,
+    int? vote,
+    double? penilaian360,
+    double? average,
+  }) {
+    return VoteResult(
+      candidate: candidate ?? this.candidate,
+      kjk: kjk ?? this.kjk,
+      ckp: ckp ?? this.ckp,
+      vote: vote ?? this.vote,
+      penilaian360: penilaian360 ?? this.penilaian360,
+      average: average ?? this.average,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'candidate': candidate.toJson(),
+      'kjk': kjk,
+      'ckp': ckp,
+      'vote': vote,
+      'penilaian360': penilaian360,
+      'average': average,
+    };
+  }
+
+  factory VoteResult.fromJson(Map<String, dynamic> map) {
+    return VoteResult(
+      candidate: EomCandidateDetails.fromJson(map['candidate'] as Map<String,dynamic>),
+      kjk: map['kjk'] as double,
+      ckp: map['ckp'] as double,
+      vote: map['vote'] as int,
+      penilaian360: map['penilaian360'] as double,
+      average: map['average'] as double,
+    );
+  }
+
+
+  @override
+  String toString() {
+    return 'VoteResult(candidate: $candidate, kjk: $kjk, ckp: $ckp, vote: $vote, penilaian360: $penilaian360, average: $average)';
+  }
+
+  @override
+  bool operator ==(covariant VoteResult other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.candidate == candidate &&
+      other.kjk == kjk &&
+      other.ckp == ckp &&
+      other.vote == vote &&
+      other.penilaian360 == penilaian360 &&
+      other.average == average;
+  }
+
+  @override
+  int get hashCode {
+    return candidate.hashCode ^
+      kjk.hashCode ^
+      ckp.hashCode ^
+      vote.hashCode ^
+      penilaian360.hashCode ^
+      average.hashCode;
   }
 }

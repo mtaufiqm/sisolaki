@@ -1,3 +1,4 @@
+import 'package:bpssulsel/repositories/tim_repository.dart';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:bpssulsel/repositories/myconnection.dart';
 import 'package:bpssulsel/repositories/pegawai_repository.dart';
@@ -8,5 +9,9 @@ Handler middleware(Handler handler) {
     MyConnectionPool conn = ctx.read<MyConnectionPool>();
     PegawaiRepository pegawaiRepository = PegawaiRepository(conn);
     return pegawaiRepository;
+  })).use(provider<TimRepository>((ctx){
+    MyConnectionPool conn = ctx.read<MyConnectionPool>();
+    TimRepository timRepository = TimRepository(conn);
+    return timRepository;
   }));
 }

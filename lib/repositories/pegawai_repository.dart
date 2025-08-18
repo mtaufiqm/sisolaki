@@ -1,3 +1,4 @@
+import 'package:bpssulsel/helper/hash_crypt_helper.dart';
 import 'package:bpssulsel/models/pegawai.dart';
 import 'package:bpssulsel/models/tim.dart';
 import 'package:bpssulsel/repositories/myconnection.dart';
@@ -43,6 +44,7 @@ class PegawaiRepository extends MyRepository<Pegawai>{
       // 'age': age,
       // 'username': username,
       // 'status_pegawai': status_pegawai,
+      
 
 
   Future<Pegawai> create(Pegawai pegawai) async {
@@ -93,6 +95,49 @@ class PegawaiRepository extends MyRepository<Pegawai>{
     });
   }
 
+  //create pegawai with user if not exists, default role is 'Pegawai'
+  Future<Pegawai> createWithUserAndRole(Pegawai pegawai) async {
+    return this.connection.connectionPool.withConnection((conn) async{
+      return conn.runTx<Pegawai>((tx) async{
+        //first check user if exists
+        Result userResult = await tx.execute(r'SELECT username FROM "user" WHERE username = $1',parameters: [pegawai.username]);
+        if(userResult.isEmpty){
+          String password = pegawai.username.trim().split("@bps.go.id")[0]+"_7300";
+          String hashedPass = HashCryptHelper.hashPassword(password);
+          Result userResult2 = await tx.execute(r'INSERT INTO "user" VALUES($1,$2,$3) ON CONFLICT(username) DO NOTHING',parameters: [
+            pegawai.username,
+            hashedPass,
+            true
+          ]);
+          //INSERT DEFAULT ROLE "PEGAWAI"
+          Result userResult3 = await tx.execute(r"INSERT INTO user_role_bridge VALUES($1,$2)",parameters: [
+            "PEGAWAI",
+            pegawai.username
+          ]);
+        }
+        String uuid = Uuid().v1();
+        pegawai.uuid = uuid;
+        Result result = await tx.execute(r'INSERT INTO pegawai VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *',
+        parameters: [
+          pegawai.uuid,
+          pegawai.fullname,
+          pegawai.fullname_with_title,
+          pegawai.nickname,
+          pegawai.nip,
+          pegawai.old_nip,
+          pegawai.phone_number,
+          pegawai.username,
+          pegawai.status_pegawai,
+          pegawai.jabatan
+        ]);
+        if(result.isEmpty){
+          throw Exception("Error Create Pegawai ${uuid}");
+        }
+        return Pegawai.fromJson(result.first.toColumnMap());
+      });
+    });
+  }
+
   Future<Pegawai> getById(dynamic pegawaiUuid) async{
     return this.connection.connectionPool.runTx((tx) async{
       Result hasil = await tx.execute(r'SELECT * FROM pegawai WHERE uuid = $1',parameters: [pegawaiUuid as String]);
@@ -118,6 +163,19 @@ class PegawaiRepository extends MyRepository<Pegawai>{
       var pegawaiMap = hasil.first.toColumnMap();
       pegawai = Pegawai.fromJson(pegawaiMap);
       return pegawai;
+    });
+  }
+
+  Future<Pegawai> setStatusPegawaiByUuid(String uuid, int status) async {
+    return this.connection.connectionPool.runTx<Pegawai>((tx) async {
+      var result = await tx.execute(r"UPDATE pegawai SET status_pegawai = $1 WHERE uuid = $2 RETURNING *",parameters: [
+        status,
+        uuid
+      ]);
+      if(result.isEmpty){
+        throw Exception("Failed Update Data");
+      }
+      return Pegawai.fromDb(result.first.toColumnMap());
     });
   }
 }

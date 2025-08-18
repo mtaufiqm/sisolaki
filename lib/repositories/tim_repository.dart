@@ -114,7 +114,7 @@ LEFT JOIN pegawai p
 ON pt.pegawai = p.uuid
 
 LEFT JOIN tim t
-ON pt.tim = tim.uuid
+ON pt.tim = t.uuid
 
 WHERE pt.pegawai = $1
 ''';

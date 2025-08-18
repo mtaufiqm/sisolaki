@@ -22,7 +22,6 @@ Future<Response> onRequest(
 
 Future<Response> onGet(RequestContext context, String uuid) async {
   User user = context.read<User>();
-  UserRepository userRepository = context.read<UserRepository>();
   TimRepository timRepository = context.read<TimRepository>();
 
   //If not contain one of this roles, or set own roles will be fails;
@@ -40,7 +39,6 @@ Future<Response> onGet(RequestContext context, String uuid) async {
 //this will update tim for certain pegawai
 Future<Response> onPost(RequestContext context, String uuid) async {
   User user = context.read<User>();
-  UserRepository userRepository = context.read<UserRepository>();
   TimRepository timRepository = context.read<TimRepository>();
 
   //If not contain one of this roles will be fails;

@@ -39,7 +39,7 @@ Future<Response> onPost(RequestContext ctx) async {
 
   //AUTHORIZATION
   User user = ctx.read<User>();
-  if(!user.isContainOne(["SUPERADMIN","ADMIN"])){
+  if(!user.isContainOne(["SUPERADMIN","ADMIN","KEPALA","KASUBBAG"])){
     return RespHelper.forbidden();
   }
   //AUTHORIZATION
@@ -50,7 +50,9 @@ Future<Response> onPost(RequestContext ctx) async {
       return RespHelper.badRequest(message: "Invalid JSON Body");
     }
     Pegawai pegawai = Pegawai.fromJson(jsonMap as Map<String,dynamic>);
-    var result = await pegawaiRepo.create(pegawai);
+    pegawai.status_pegawai = 0;
+    pegawai.jabatan = 2;
+    var result = await pegawaiRepo.createWithUserAndRole(pegawai);
     return Response.json(body: result.toJson());
   } catch(e){
     print(e);

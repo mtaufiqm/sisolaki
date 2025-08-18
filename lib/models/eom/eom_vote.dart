@@ -194,6 +194,19 @@ class EomVoteDetails {
     );
   }
 
+  factory EomVoteDetails.fromDbPrefix(Map<String, dynamic> map, String prefix) {
+    return EomVoteDetails(
+      uuid: map['${prefix}_uuid'] != null ? map['${prefix}_uuid'] as String : null,
+      penilaian: map['${prefix}_penilaian'] as String,
+      voter: null,
+      choice1: null,
+      choice2: null,
+      created_at: map['${prefix}_created_at'] != null ? map['${prefix}_created_at'] as String : null,
+      last_updated: map['${prefix}_last_updated'] != null ? map['${prefix}_last_updated'] as String : null,
+      is_complete: map['${prefix}_is_complete'] as bool,
+    );
+  }
+
   @override
   String toString() {
     return 'EomVoteDetails(uuid: $uuid, penilaian: $penilaian, voter: $voter, choice1: $choice1, choice2: $choice2, created_at: $created_at, last_updated: $last_updated, is_complete: $is_complete)';

@@ -176,4 +176,3 @@ WHERE pt.pegawai = $1
    });
   }
 }
-

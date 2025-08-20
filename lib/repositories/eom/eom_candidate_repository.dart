@@ -350,6 +350,22 @@ WHERE ec.penilaian = $1
         );
         voteResultList.add(voteResult);
       }
+      //sort the result list;
+      voteResultList.sort((el1,el2){
+        if(el1.average > el2.average){
+          return 1;
+        }
+        if(el1.average < el2.average){
+          return -1;
+        }
+        if(el1.kjk < el2.kjk){
+          return 1;
+        }
+        if(el1.kjk > el2.kjk){
+          return -1;
+        }
+        return 0;
+      });
       return voteResultList;
     });
   }

@@ -72,7 +72,19 @@ ORDER BY pt.tim_role ASC
   }
 
   Future<Tim> create(Tim object) async {
-    return object;
+    return this.conn.connectionPool.runTx<Tim>((tx) async {
+      String uuid = Uuid().v1();
+      object.uuid = uuid;
+      var result = await tx.execute(r"INSERT INTO tim VALUES($1,$2,$3) RETURNING *",parameters: [
+        object.uuid!,
+        object.title,
+        object.desc
+      ]);
+      if(result.isEmpty){
+        throw Exception("Failed Insert New Tim");
+      }
+      return Tim.fromJson(result.first.toColumnMap());
+    });
   }
 
   Future<List<Tim>> readAll() async {

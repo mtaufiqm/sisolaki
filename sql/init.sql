@@ -127,6 +127,14 @@ CREATE TABLE "penilaian360_answers" (
   "value" integer NOT NULL DEFAULT 0
 );
 
+CREATE TABLE "report" (
+  "uuid" text PRIMARY KEY,
+  "user" text NOT NULL,
+  "title" text NOT NULL,
+  "desc" text NOT NULL,
+  "created_at" text
+);
+
 ALTER TABLE "user_role_bridge" ADD FOREIGN KEY ("description") REFERENCES "roles" ("description");
 
 ALTER TABLE "user_role_bridge" ADD FOREIGN KEY ("username") REFERENCES "user" ("username");
@@ -170,6 +178,10 @@ ALTER TABLE "eom_penilaian360" ADD FOREIGN KEY ("candidate") REFERENCES "eom_can
 ALTER TABLE "penilaian360_answers" ADD FOREIGN KEY ("penilaian360") REFERENCES "eom_penilaian360" ("uuid") ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE "penilaian360_answers" ADD FOREIGN KEY ("question") REFERENCES "penilaian360_questions" ("uuid") ON UPDATE CASCADE;
+
+ALTER TABLE "report" ADD FOREIGN KEY ("user") REFERENCES "user" ("username") ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE "user_role_bridge" ADD UNIQUE("username","description");
 
 ALTER TABLE "pegawai_tim" ADD UNIQUE("pegawai","tim");
 

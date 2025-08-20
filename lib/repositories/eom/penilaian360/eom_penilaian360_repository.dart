@@ -198,4 +198,48 @@ ORDER BY ec.order ASC
       return listObject;
     });
   }
+
+  Future<List<EomPenilaian360Grouped>> readByPenilaianGroupByVoter(String penilaian_uuid) async {
+    return this.conn.connectionPool.runTx<List<EomPenilaian360Grouped>>((tx) async {
+      String query = r'''
+SELECT
+
+ep360.*,
+
+p.uuid as p_uuid,
+p.fullname as p_fullname,
+p.fullname_with_title as p_fullname_with_title,
+p.nickname as p_nickname,
+p.nip as p_nip,
+p.old_nip as p_old_nip,
+p.phone_number as p_phone_number,
+p.username as p_username,
+p.status_pegawai as p_status_pegawai,
+p.jabatan as p_jabatan
+
+FROM eom_penilaian360 ep360
+LEFT JOIN pegawai p
+ON ep360.voter = p.uuid
+
+WHERE ep360.penilaian = $1
+ORDER BY ep360.voter ASC, ep360.candidate ASC 
+''';
+      var result = await tx.execute(query,parameters: [penilaian_uuid]);
+      if(result.isEmpty){
+        return [];
+      }
+      Map<String,EomPenilaian360Grouped> group360 = {}; 
+      for(var item in result){
+        var itemMap = item.toColumnMap();
+        Pegawai voter = Pegawai.fromDbPrefix(itemMap, "p");
+        EomPenilaian360 p360 = EomPenilaian360.fromDb(itemMap);
+        if(!group360.containsKey(voter.uuid!)){
+          group360[voter.uuid!] = EomPenilaian360Grouped(object: voter.toJson(), penilaian360: [p360]);
+          continue;
+        }
+        group360[voter.uuid!]!.penilaian360.add(p360);
+      }
+      return group360.values.toList();
+    });
+  }
 }

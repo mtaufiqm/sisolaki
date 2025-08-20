@@ -77,6 +77,9 @@ class UserRepository extends MyRepository<User>{
   Future<void> deleteOldUserRoles(User targetUser) async{
     return this.connection.connectionPool.runTx<void>((tx) async {
       Result hasil = await tx.execute(r"DELETE FROM user_role_bridge WHERE username = $1",parameters: [targetUser.username]);
+      if(hasil.affectedRows <= 0){
+        throw Exception("Failed Clear Roles");
+      }
       return;
     });
   }
@@ -96,9 +99,9 @@ class UserRepository extends MyRepository<User>{
 
   Future<List<User>> getUsersWithRole(dynamic role) async {
     return await this.connection.connectionPool.runTx<List<User>>((tx) async {
-      var result = await tx.execute(r'select "user".username as username, "user".pwd as pwd, "user".is_active FROM as is_active FROM "user" LEFT JOIN user_role_bridge ON "user".username  = user_role_bridge.username where description = $1',parameters: [role as String]);
+      var result = await tx.execute(r'select "user".username as username, "user".pwd as pwd, "user".is_active FROM "user" LEFT JOIN user_role_bridge ON "user".username  = user_role_bridge.username where description = $1',parameters: [role as String]);
       if(result.isEmpty){
-        throw Exception("There is User with ${role as String} role");
+        throw Exception("There is no User with ${role as String} role");
       }
       List<User> returnValue = [];
       for(var item in result){
@@ -106,6 +109,31 @@ class UserRepository extends MyRepository<User>{
         returnValue.add(itemUser);
       }
       return returnValue;
+    });
+  }
+
+  Future<List<Roles>> readAllRole() async {
+    return await this.connection.connectionPool.runTx<List<Roles>>((tx) async {
+      var result = await tx.execute(r'SELECT * FROM roles');
+      List<Roles> returnValue = [];
+      for(var item in result){
+        Roles role = Roles.fromJson(item.toColumnMap());
+        returnValue.add(role);
+      }
+      return returnValue;
+    });
+  }
+
+  Future<void> insertNewRoleForUser(String username, Roles object) async {
+    return await this.connection.connectionPool.runTx<void>((tx) async {
+      var result = await tx.execute(r'INSERT INTO user_role_bridge VALUES($1,$2) RETURNING *',parameters: [
+        object.description,
+        username
+      ]);
+      if(result.isEmpty){
+        throw Exception("Failed Insert Role");
+      }
+      return;
     });
   }
 }

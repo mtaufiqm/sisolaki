@@ -74,6 +74,19 @@ class EomPenilaian360 {
       last_updated: map['last_updated'] as String,
     );
   }
+
+  factory EomPenilaian360.fromDb(Map<String, dynamic> map) {
+    return EomPenilaian360(
+      uuid: map['uuid'] != null ? map['uuid'] as String : null,
+      penilaian: map['penilaian'] as String,
+      voter: map['voter'] as String,
+      candidate: map['candidate'] as String,
+      value: map['value'] as double,
+      is_complete: map['is_complete'] as bool,
+      created_at: map['created_at'] != null ? map['created_at'] as String : null,
+      last_updated: map['last_updated'] as String,
+    );
+  }
   
   @override
   String toString() {
@@ -256,4 +269,53 @@ class Penilaian360WithQuestions {
 
   @override
   String toString() => 'Penilaian360WithQuestions(penilaian360: $penilaian360, questions_answer: $questions_answer)';
+}
+
+class EomPenilaian360Grouped {
+  Map<String,dynamic> object;
+  List<EomPenilaian360> penilaian360;
+  EomPenilaian360Grouped({
+    required this.object,
+    required this.penilaian360,
+  });
+
+  EomPenilaian360Grouped copyWith({
+    Map<String,dynamic>? object,
+    List<EomPenilaian360>? penilaian360,
+  }) {
+    return EomPenilaian360Grouped(
+      object: object ?? this.object,
+      penilaian360: penilaian360 ?? this.penilaian360,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'object': object,
+      'penilaian360': penilaian360.map((x) => x.toJson()).toList(),
+    };
+  }
+
+  factory EomPenilaian360Grouped.fromJson(Map<String, dynamic> map) {
+    return EomPenilaian360Grouped(
+      object: Map<String,dynamic>.from((map['object'] as Map<String,dynamic>)),
+      penilaian360: List<EomPenilaian360>.from((map['penilaian360'] as List<dynamic>).map<EomPenilaian360>((x) => EomPenilaian360.fromJson(x as Map<String,dynamic>),),)
+    );
+  }
+
+  @override
+  String toString() => 'EomPenilaian360Grouped(object: $object, penilaian360: $penilaian360)';
+
+  @override
+  bool operator ==(covariant EomPenilaian360Grouped other) {
+    if (identical(this, other)) return true;
+    final collectionEquals = const DeepCollectionEquality().equals;
+  
+    return 
+      collectionEquals(other.object, object) &&
+      collectionEquals(other.penilaian360, penilaian360);
+  }
+
+  @override
+  int get hashCode => object.hashCode ^ penilaian360.hashCode;
 }

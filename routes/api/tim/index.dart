@@ -26,7 +26,6 @@ Future<Response> onGet(RequestContext ctx) async {
   //AUTHORIZATION
 
   try {
-    print("GET All Tim");
     return Response.json(body: await timRepository.readAll());
   } catch(err){
     return RespHelper.badRequest(message: "Error Occured ${err}");
@@ -50,7 +49,6 @@ Future<Response> onPost(RequestContext ctx) async {
       return RespHelper.badRequest(message: "Invalid JSON Body");
     }
     Tim inputTim = Tim.fromJson(jsonBody as Map<String,dynamic>);
-
     return Response.json(body: await timRepository.create(inputTim));
   } catch(err){
     return RespHelper.badRequest(message: "Error Occured ${err}");

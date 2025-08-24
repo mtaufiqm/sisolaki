@@ -366,6 +366,7 @@ WHERE ec.penilaian = $1
         }
         return 0;
       });
+      voteResultList = voteResultList.reversed.toList();
       return voteResultList;
     });
   }

@@ -136,4 +136,17 @@ class UserRepository extends MyRepository<User>{
       return;
     });
   }
+
+  Future<void> updatePasswordOnly(String username, String pwd) async {
+    return this.connection.connectionPool.runTx((tx) async {
+      var result = await tx.execute(r'UPDATE "user" SET pwd = $1 WHERE username = $2 RETURNING *',parameters: [
+        pwd,
+        username
+      ]);
+      if(result.isEmpty){
+        throw Exception("Failed Insert Role");
+      }
+      return;
+    });
+  }
 }

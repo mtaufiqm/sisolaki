@@ -16,15 +16,11 @@ class TimRepository {
 
   Future<TimWithPegawai> getDetailsById(String id) async {
     return this.conn.connectionPool.runTx((tx) async {
-      print("EXECUTED");
       var result = await tx.execute(r"SELECT * FROM tim WHERE tim.uuid = $1",parameters: [id]);
       if(result.isEmpty){
         throw Exception("There is no Data");
       }
-      //print("EXECUTED");
-
       var timDetails = TimWithPegawai.fromDb(result.first.toColumnMap());
-
       String query = r'''
 SELECT
 pt.*,

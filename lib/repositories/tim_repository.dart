@@ -161,6 +161,19 @@ WHERE pt.pegawai = $1
       return;
    });
   }
+ 
+  Future<void> deleteSpesificPegawaiAndTim(String pegawai, String tim) async {
+    return this.conn.connectionPool.runTx<void>((tx) async {
+      var result = await tx.execute(r"DELETE FROM pegawai_tim pt WHERE pt.pegawai = $1 AND pt.tim = $2",parameters: [
+        pegawai,
+        tim
+      ]);
+      if(result.affectedRows <= 0){
+        throw Exception("Error Occured");
+      }
+      return;
+    });
+  }
 
   //this will delete old;
   Future<void> clearTimForSpesificPegawai(String pegawai) async {

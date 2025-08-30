@@ -19,17 +19,29 @@ class PegawaiRepository extends MyRepository<Pegawai>{
   }
   
   Future<List<Pegawai>> readAll() async{
-    return this.connection.connectionPool.withConnection<List<Pegawai>>((conn) async {
-      return conn.runTx((tx) async {
-        Result result = await tx.execute('SELECT * FROM pegawai ORDER BY nip ASC');
-        List<Pegawai> listOfPegawai = <Pegawai>[];
-        for(ResultRow i in result){
-          Map<String,dynamic> mapRow = i.toColumnMap();
-          Pegawai pegawai = Pegawai.fromJson(mapRow);
-          listOfPegawai.add(pegawai);
-        }
-        return listOfPegawai;
-      });
+    return this.connection.connectionPool.runTx<List<Pegawai>>((tx) async {
+      Result result = await tx.execute('SELECT * FROM pegawai ORDER BY nip ASC');
+      List<Pegawai> listOfPegawai = <Pegawai>[];
+      for(ResultRow i in result){
+        Map<String,dynamic> mapRow = i.toColumnMap();
+        Pegawai pegawai = Pegawai.fromJson(mapRow);
+        listOfPegawai.add(pegawai);
+      }
+      return listOfPegawai;
+    });
+  }
+
+
+  Future<List<Pegawai>> readAllByStatus(int status) async {
+    return this.connection.connectionPool.runTx<List<Pegawai>>((tx) async {
+      Result result = await tx.execute(r'SELECT * FROM pegawai p WHERE p.status_pegawai = $1 ORDER BY p.nip ASC',parameters: [status]);
+      List<Pegawai> listOfPegawai = <Pegawai>[];
+      for(ResultRow i in result){
+        Map<String,dynamic> mapRow = i.toColumnMap();
+        Pegawai pegawai = Pegawai.fromJson(mapRow);
+        listOfPegawai.add(pegawai);
+      }
+      return listOfPegawai;
     });
   }
 

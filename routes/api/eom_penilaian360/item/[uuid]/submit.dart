@@ -1,8 +1,11 @@
+import 'package:bpssulsel/helper/datetime_helper.dart';
 import 'package:bpssulsel/helper/response_helper.dart';
+import 'package:bpssulsel/models/eom/eom_penilaian.dart';
 import 'package:bpssulsel/models/eom/penilaian360/eom_penilaian360.dart';
 import 'package:bpssulsel/models/eom/penilaian360/penilaian360_answers.dart';
 import 'package:bpssulsel/models/eom/penilaian360/penilaian360_questions.dart';
 import 'package:bpssulsel/models/user.dart';
+import 'package:bpssulsel/repositories/eom/eom_penilaian_repository.dart';
 import 'package:bpssulsel/repositories/eom/eom_vote_repository.dart';
 import 'package:bpssulsel/repositories/eom/penilaian360/eom_penilaian360_repository.dart';
 import 'package:bpssulsel/repositories/eom/penilaian360/penilaian360_answers_repository.dart';
@@ -10,6 +13,7 @@ import 'package:bpssulsel/repositories/eom/penilaian360/penilaian360_questions_r
 import 'package:bpssulsel/repositories/pegawai_repository.dart';
 import 'package:bpssulsel/responses/penilaian360_submit_response.dart';
 import 'package:dart_frog/dart_frog.dart';
+import 'package:intl/intl.dart';
 
 Future<Response> onRequest(
   RequestContext context,
@@ -24,14 +28,23 @@ Future<Response> onRequest(
 Future<Response> onPost(RequestContext ctx, String uuid) async {
 
   EomPenilaian360Repository eop360Repo = ctx.read<EomPenilaian360Repository>();
+  EomPenilaianRepository eomPenilaianRepo = ctx.read<EomPenilaianRepository>();
   Penilaian360AnswersRepository eom360AnswerRepo = ctx.read<Penilaian360AnswersRepository>();
   Penilaian360QuestionsRepository eom360QuestionRepo = ctx.read<Penilaian360QuestionsRepository>();
   PegawaiRepository pegawaiRepo = ctx.read<PegawaiRepository>();
   User authUser = ctx.read<User>();
 
   try {
-
     EomPenilaian360Details object = await eop360Repo.getDetailsByUuid(uuid);
+
+    EomPenilaian penilaian = await eomPenilaianRepo.getByUuid(object.penilaian);
+    String current_date_string = DateFormat("yyyy-MM-dd").format(DatetimeHelper.parseMakassarTime(DatetimeHelper.getCurrentMakassarTime()));
+    DateTime current_date = DateTime.parse(current_date_string+" 10:00:00.0");
+    DateTime start_date = DateTime.parse(penilaian.start_date+" 00:00:00.1");
+    DateTime end_date = DateTime.parse(penilaian.end_date+" 23:59:59.0");
+    if(current_date.isAfter(end_date) || current_date.isBefore(start_date)){
+      return RespHelper.badRequest(message: "Out of periode");
+    }
 
     //AUTHORIZATION
     if(!(authUser.isContainOne(["SUPERADMIN","ADMIN","KEPALA","KASUBBAG"]) || authUser.username == object.voter?.p_username)){

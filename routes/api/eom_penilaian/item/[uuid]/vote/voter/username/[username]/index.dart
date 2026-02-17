@@ -1,12 +1,16 @@
+import 'package:bpssulsel/helper/datetime_helper.dart';
 import 'package:bpssulsel/helper/response_helper.dart';
 import 'package:bpssulsel/models/eom/eom_candidate.dart';
+import 'package:bpssulsel/models/eom/eom_penilaian.dart';
 import 'package:bpssulsel/models/eom/eom_vote.dart';
 import 'package:bpssulsel/models/pegawai.dart';
 import 'package:bpssulsel/models/user.dart';
 import 'package:bpssulsel/repositories/eom/eom_candidate_repository.dart';
+import 'package:bpssulsel/repositories/eom/eom_penilaian_repository.dart';
 import 'package:bpssulsel/repositories/eom/eom_vote_repository.dart';
 import 'package:bpssulsel/repositories/pegawai_repository.dart';
 import 'package:dart_frog/dart_frog.dart';
+import 'package:intl/intl.dart';
 
 Future<Response> onRequest(
   RequestContext context,
@@ -46,6 +50,7 @@ Future<Response> onGet(RequestContext ctx, String uuid, String username) async {
 //can be updated only if it still not completed
 Future<Response> onPost(RequestContext ctx, String uuid, String username) async {
   EomVoteRepository eomVoteRepo = ctx.read<EomVoteRepository>();
+  EomPenilaianRepository eomPenilaianRepo = ctx.read<EomPenilaianRepository>();
   EomCandidateRepository eomCandidateRepo = ctx.read<EomCandidateRepository>();
   PegawaiRepository pegawaiRepo = ctx.read<PegawaiRepository>();
   User authUser = ctx.read<User>();
@@ -58,17 +63,22 @@ Future<Response> onPost(RequestContext ctx, String uuid, String username) async 
   //AUTHORIZATION
 
   try {
-
+    EomPenilaian penilaian = await eomPenilaianRepo.getByUuid(uuid);
+    String current_date_string = DateFormat("yyyy-MM-dd").format(DatetimeHelper.parseMakassarTime(DatetimeHelper.getCurrentMakassarTime()));
+    DateTime current_date = DateTime.parse(current_date_string+" 10:00:00.0");
+    DateTime start_date = DateTime.parse(penilaian.start_date+" 00:00:00.1");
+    DateTime end_date = DateTime.parse(penilaian.end_date+" 23:59:59.0");
+    if(current_date.isAfter(end_date) || current_date.isBefore(start_date)){
+      return RespHelper.badRequest(message: "Out of periode");
+    }
     var voteDetails = await eomVoteRepo.getDetailsByPenilaianAndVoterUsername(uuid,username);
     if(voteDetails.is_complete == true){
       return RespHelper.badRequest(message: "Already Completed");
     }
-
     var mapBody = await ctx.request.json();
     if(!(mapBody is Map<String,dynamic>)){
       return RespHelper.badRequest(message: "Invalid JSON Body");
     }
-
     EomVote updateVote = EomVote.fromJson(mapBody);
     updateVote.uuid = voteDetails.uuid!;
     updateVote.penilaian = voteDetails.penilaian;
@@ -76,18 +86,13 @@ Future<Response> onPost(RequestContext ctx, String uuid, String username) async 
     updateVote.created_at = voteDetails.created_at;
     updateVote.last_updated = voteDetails.last_updated;
     updateVote.is_complete = true;
-
     if(updateVote.choice1 == null || updateVote.choice2 == null){
       return RespHelper.badRequest(message: "Pilihan Tidak Boleh Kosong!");
     }
-
     if(updateVote.choice1 == updateVote.choice2){
       return RespHelper.badRequest(message: "Pilihan Tidak Boleh Sama!");
     }
-
-
     List<String> listUuidCandidate = (await eomCandidateRepo.readDetailsByPenilaian(uuid)).map((el) => el.pegawai!.p_uuid!).toList();
-
     if(!(listUuidCandidate.contains(updateVote.choice1) && listUuidCandidate.contains(updateVote.choice2))){
       return RespHelper.badRequest(message: "Pilihan Tidak Terdapat Dalam Kandidat");
     }

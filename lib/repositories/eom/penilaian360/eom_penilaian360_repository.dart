@@ -87,6 +87,8 @@ WHERE ep360.uuid = $1
       ]);
       if(!result.isEmpty){
         ep360_details.candidate = EomCandidateDetails.fromDb(result.first.toColumnMap());
+        ep360_details.candidate!.pegawai = PegawaiDetails.fromJson(result.first.toColumnMap());
+        ep360_details.candidate!.tim = TimDetails.fromJson(result.first.toColumnMap());
       }
 
       var query2 = r'''

@@ -22,5 +22,4 @@ Future<Response> onGet(RequestContext ctx, String uuid) async {
   } catch(err){
     return RespHelper.badRequest(message: "Error Occurred ${err}");
   }
-  
 }

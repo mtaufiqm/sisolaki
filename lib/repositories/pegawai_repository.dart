@@ -31,7 +31,6 @@ class PegawaiRepository extends MyRepository<Pegawai>{
     });
   }
 
-
   Future<List<Pegawai>> readAllByStatus(int status) async {
     return this.connection.connectionPool.runTx<List<Pegawai>>((tx) async {
       Result result = await tx.execute(r'SELECT * FROM pegawai p WHERE p.status_pegawai = $1 ORDER BY p.nip ASC',parameters: [status]);

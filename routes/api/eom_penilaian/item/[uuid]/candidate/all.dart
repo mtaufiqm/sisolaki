@@ -24,7 +24,7 @@ Future<Response> onGet(RequestContext ctx, String uuid) async {
   User authUser = ctx.read<User>();
 
   //AUTHORIZATION
-  if(!(authUser.isContainOne(["SUPERADMIN","ADMIN","PEGAWAI"]))){
+  if(!(authUser.isContainOne(["SUPERADMIN","ADMIN","KEPALA","KASUBBAG","PEGAWAI"]))){
     return RespHelper.forbidden();
   }
   //AUTHORIZATION
@@ -36,4 +36,5 @@ Future<Response> onGet(RequestContext ctx, String uuid) async {
     print(e);
     return RespHelper.badRequest(message: "Error Occured");
   }
+  
 }

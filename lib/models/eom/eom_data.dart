@@ -64,9 +64,9 @@ class EomData {
     return EomData(
       uuid: map['uuid'] != null ? map['uuid'] as String : null,
       candidate: map['candidate'] as String,
-      kjk: map['kjk'] as double,
+      kjk: double.parse(map['kjk'].toString()),
       vote: map['vote'] as int,
-      ckp: map['ckp'] as double,
+      ckp: double.parse(map['ckp'].toString()),
       created_at: map['created_at'] != null ? map['created_at'] as String : null,
       last_updated: map['last_updated'] != null ? map['last_updated'] as String : null,
     );
@@ -175,8 +175,8 @@ class VoteResult {
   factory VoteResult.fromJson(Map<String, dynamic> map) {
     return VoteResult(
       candidate: EomCandidateDetails.fromJson(map['candidate'] as Map<String,dynamic>),
-      kjk: map['kjk'] as double,
-      ckp: map['ckp'] as double,
+      kjk: double.parse(map['kjk'].toString()),
+      ckp: double.parse(map['ckp'].toString()),
       vote: map['vote'] as int,
       penilaian360: map['penilaian360'] as double,
       average: map['average'] as double,

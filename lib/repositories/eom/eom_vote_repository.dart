@@ -130,7 +130,6 @@ p.username = $2
         if(!result2.isEmpty){
           voteDetails.choice1 = Pegawai.fromJson(result2.first.toColumnMap());
         }
-        print("Empty Choice1");
       }
 
       if((row["choice2"] as String?) != null) {
@@ -138,8 +137,6 @@ p.username = $2
         if(!result2.isEmpty){
           voteDetails.choice2 = Pegawai.fromJson(result2.first.toColumnMap());
         }
-        
-        print("Empty Choice2");
       }
       return voteDetails;
     }); 

@@ -1,23 +1,53 @@
+# SISOLA KI
 
 
-SISOLA KI (Sistem InformaSI Online Laporan Kinrja Pegawai) App
+---
 
-# First, ensure Dart installed
+## Prerequisites
 
-# EDIT DATABASE CONNECTION:
-- ./lib/repositories/myconnection.dart
+Ensure Dart is installed:
 
-# JWT Secret Key:
-- ./lib/helper/jwt_helper.dart
+```bash
+dart --version
+```
 
-# RUN APP Development
-- dart pub get
-- dart pub global activate dart_frog_cli
-- dart_frog dev
+---
 
-# RUN APP Deployment
-- dart pub get
-- dart pub global activate dart_frog_cli
-- dart_frog build
-- default PORT is 80, add/change "SERVER_PORT" environment variable to change default PORT
-- dart run ./build/bin/server.dart
+## Configuration
+
+* **Database Connection**
+  `./lib/repositories/myconnection.dart`
+
+* **JWT Secret Key**
+  `./lib/helper/jwt_helper.dart`
+
+---
+
+## Development
+
+```bash
+dart pub get
+dart pub global activate dart_frog_cli
+dart_frog dev
+```
+
+---
+
+## Deployment
+
+```bash
+dart pub get
+dart pub global activate dart_frog_cli
+dart_frog build
+```
+
+Run the server:
+
+```bash
+dart run ./build/bin/server.dart
+```
+
+* Default port: **80**
+* To change, set environment variable: `SERVER_PORT`
+
+---

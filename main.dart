@@ -10,5 +10,6 @@ import "package:timezone/standalone.dart" as tz;
 Future<HttpServer> run(Handler handler,InternetAddress ip,int port) async {
   tz.initializeTimeZones();
   await DatetimeHelper.initInstance();
-  return serve(handler, ip, port);
+  int serverPort = int.tryParse(Platform.environment["SERVER_PORT"]??"80")??80;
+  return serve(handler, ip, serverPort);
 }
